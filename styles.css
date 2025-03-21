@@ -5,6 +5,15 @@ body {
 	width: 100vw;
 }
 
+@keyframes backgroundSideScroll {
+	from {
+		background-position: 0, 0;
+	}
+	to {
+		background-position: -5000px, 0;
+	}
+}
+
 .playingArea {
 	height: 100vh;
 	width: 100vw;
@@ -13,10 +22,11 @@ body {
 	justify-content: center;
 	align-items: center;
 	gap: 20px;
-    background-image: url('https://static.vecteezy.com/system/resources/previews/044/245/335/non_2x/illustration-of-highland-landscapes-with-pixel-art-design-vector.jpg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+	background-image: url('https://static.vecteezy.com/system/resources/previews/044/245/335/non_2x/illustration-of-highland-landscapes-with-pixel-art-design-vector.jpg');
+	background-position: center;
+	background-repeat: repeat-x;
+	background-size: cover;
+	animation: backgroundSideScroll 600s infinite linear;
 }
 
 #board {
@@ -37,41 +47,61 @@ body {
 	justify-content: center;
 	align-items: center;
 	margin: 0;
-    font-size: 72px;
-    font-family: 'Press Start 2P';
-    text-align: center;
-
+	font-size: 72px;
+	font-family: 'Press Start 2P';
+	text-align: center;
 }
 
-.square:nth-last-child(-n+3) { /* Last row in a 3x3 grid */
-    border-top: none;
+.square:nth-last-child(-n + 3) {
+	/* Last row in a 3x3 grid */
+	border-top: none;
 }
 
-.square:nth-child(-n+3) { /* Last row in a 3x3 grid */
-    border-bottom: none;
+.square:nth-child(-n + 3) {
+	/* Last row in a 3x3 grid */
+	border-bottom: none;
 }
 
-.square:nth-child(3n+1) {
-    border-right: none;
+.square:nth-child(3n + 1) {
+	border-right: none;
 }
 
-.square:nth-child(3n){
-    border-left: none;
+.square:nth-child(3n) {
+	border-left: none;
 }
 
 .playerName {
 	text-align: centre;
+	width: 30vw;
+	font-family: 'Press Start 2P';
+	font-size: 24px;
+	border: none;
+	width: 15vw;
+	height: 30px;
+}
+
+#playerNamesInput {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 15px;
+	align-items: center;
+}
+
+#playersSelected {
+	font-family: 'Press Start 2P';
+	font-size: 32px;
 }
 
 #start {
-    font-size: 72px;
-    position: fixed;
-    font-family: "Press Start 2P";
-    background: none;
-    border: none;
-    cursor: pointer;
+	font-size: 72px;
+	position: fixed;
+	font-family: 'Press Start 2P';
+	background: none;
+	border: none;
+	cursor: pointer;
 }
 
 #restart {
-    display: none;
+	display: none;
 }
