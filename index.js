@@ -1,12 +1,13 @@
 const Gameboard = (() => {
 	//Creates an empty array of 9 spaces for our board
-	let gameboard = ['', '', '', '', '', '', '', '', ''];
+	let gameboard = Array(9).fill('');
+	let selectColours = Array(9).fill('');
 
 	//Here we will render the board and player names
 	const render = () => {
 		let boardHTML = '';
 		gameboard.forEach((square, index) => {
-			boardHTML += `<div class='square' id='square-${index}'>${square}</div>`;
+			boardHTML += `<div class='square' id='square-${index}' style="color: ${selectColours[index]}">${square}</div>`;
 		});
 		document.querySelector('#board').innerHTML = boardHTML;
 		//We attach the event listeners to each square on the baord
@@ -16,8 +17,9 @@ const Gameboard = (() => {
 		});
 	};
 
-	const updateBoard = (index, playSymbol) => {
+	const updateBoard = (index, playSymbol, colour) => {
 		gameboard[index] = playSymbol;
+		selectColours[index] = colour;
 		render();
 	};
 
@@ -57,12 +59,13 @@ const Game = (() => {
 		} vs ${playerTwoNameInput.value ? players[1].name : 'Player 2'}`;
 		playerOneNameInput.value = '';
 		playerTwoNameInput.value = '';
-		document.querySelector('#startButton').textContent = 'Restart';
-		document.querySelector('#startButton').addEventListener('click', restart());
+		document.querySelector('#start').style.display = 'none';
+		document.querySelector('#restart').style.display = 'block';
 	};
 
 	//Here is the logic to restart the game
 	const restart = () => {
+		gameOver = false;
 		for (i = 0; i < 9; i++) {
 			Gameboard.updateBoard([i], '');
 		}
@@ -97,13 +100,20 @@ const Game = (() => {
 
 	//Here we handle the click of each square, swapping the player index/turn on each click,
 	//and then sending the correct play symbol to our gameboard array via the updateBoard function
-	const handleClick = (e) => {
+	const handleClick = async (e) => {
 		const index = parseInt(e.target.id.split('-')[1]);
 		if (Gameboard.getGameboard()[index] !== '' || gameOver) {
 			return;
 		}
 
-		Gameboard.updateBoard(index, players[currentPlayerIndex].symbol);
+		let colour = currentPlayerIndex === 0 ? '#cc00cc' : '#2222ee';
+
+		//Here we have created a promise that must resolve first, before we check for win/draw conditions
+		//This is due to the board not visually updating before showing us the winner.
+		await new Promise((resolve) => {
+			Gameboard.updateBoard(index, players[currentPlayerIndex].symbol, colour);
+			setTimeout(resolve, 0);
+		});
 
 		//Check for win
 		if (checkForWin(Gameboard.getGameboard())) {
@@ -114,6 +124,7 @@ const Game = (() => {
 
 		//Check for a draw
 		if (!gameOver && checkForDraw(Gameboard.getGameboard())) {
+			gameOver = true;
 			alert('Draw!');
 			return;
 		}
@@ -130,7 +141,13 @@ const Game = (() => {
 })();
 
 const startButton = document
-	.querySelector('#startButton')
+	.querySelector('#start')
 	.addEventListener('click', () => {
 		Game.start();
+	});
+
+const restartButton = document
+	.querySelector('#restart')
+	.addEventListener('click', () => {
+		Game.restart();
 	});
